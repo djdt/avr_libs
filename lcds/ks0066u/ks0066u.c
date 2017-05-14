@@ -39,12 +39,6 @@ void lcd_ram(uint8_t ram)
 
 /* END INTERNAL */
 
-void lcd_cmd(uint8_t cmd)
-{
-	send_byte(cmd, BL);
-	_delay_us(50);
-}
-
 void lcd_init()
 {
 	send_4_bits(LCD_CMD_FNC);
@@ -53,6 +47,12 @@ void lcd_init()
 	lcd_cmd(LCD_CMD_DSP | 0x04);
 	lcd_cmd(LCD_CMD_CLR);
 	_delay_ms(2);
+}
+
+void lcd_cmd(uint8_t cmd)
+{
+	send_byte(cmd, BL);
+	_delay_us(50);
 }
 
 void lcd_cursor(uint8_t x, uint8_t y)
@@ -68,6 +68,7 @@ void lcd_printf(const char* format, ...)
 	va_list args;
 	va_start(args, format);
 	vsprintf(buffer, format, args); // Skips overwrite of address
+	va_end(args);
 
 	/* Write string to LCD */
 	char* b = buffer;
