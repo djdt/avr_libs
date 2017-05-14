@@ -1,5 +1,5 @@
-#ifndef _AVR_LCD_CHEAP_LCD_H_
-#define _AVR_LCD_CHEAP_LCD_H_
+#ifndef _AVR_LCD_KS0066U_H_
+#define _AVR_LCD_KS0066U_H_
 
 #include <stdint.h>
 
@@ -23,4 +23,4 @@ void lcd_cursor(uint8_t x, uint8_t y);
 
 void lcd_printf(const char* format, ...);
 
-#endif /* ifndef _AVR_LCD_CHEAP_LCD_H_ */
+#endif /* ifndef _AVR_LCD_KS0066U_H_ */

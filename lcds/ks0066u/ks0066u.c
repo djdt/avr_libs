@@ -1,4 +1,4 @@
-#include "avr_libs/lcds/cheap_lcd.h"
+#include "avr_libs/lcds/ks0066u.h"
 
 #include "avr_libs/utils/usi_twi.h"
 
