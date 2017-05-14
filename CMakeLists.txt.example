@@ -1,0 +1,89 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(test_asm)
+
+# AVR_LIB path
+set(AVR_LIB_NAME avr_libs)
+# Library sub dirs you wish to include
+set(AVR_LIB_USED utils/usi_twi sensors/color_tcs3472)
+
+# Project specfic definitions
+set(MCU_TYPE  attiny84a)
+set(PROG_TYPE usbtiny)
+set(F_CPU     4000000)
+set(LFUSE     0x62)
+set(HFUSE     0xdf)
+set(EFUSE     0x05)
+
+#######################################################################
+#                           End user config                           #
+#######################################################################
+
+# Set the compiler
+set(CMAKE_SYSTEM_NAME  Generic)
+set(CMAKE_ASM_COMPILER avr-asm)
+set(CMAKE_C_COMPILER   avr-gcc)
+
+# Compiler flags
+set(CFLAGS "-std=c99 -Wall -Os -DF_CPU=${F_CPU} -mmcu=${MCU_TYPE}")
+
+set(CMAKE_C_FLAGS   "${CFLAGS}")
+set(CMAKE_ASM_FLAGS "${CFLAGS}")
+
+# Project files
+set(INC_PATH "${${PROJECT_NAME}_SOURCE_DIR}/include")
+set(SRC_PATH "${${PROJECT_NAME}_SOURCE_DIR}/src")
+
+file(GLOB_RECURSE SRC_FILES "${SRC_PATH}/*.asm"
+	                          "${SRC_PATH}/*.c"
+	                          "${SRC_PATH}/*.s"
+														"${SRC_PATH}/*.S"
+)
+
+# Libs files
+set(AVR_LIB_PATH "${${PROJECT_NAME}_SOURCE_DIR}/${AVR_LIB_NAME}")
+set(AVR_LIB_INC_PATH "${AVR_LIB_PATH}/include")
+set(AVR_LIB_SRC_FILES)
+set(AVR_LIB_NOT_FOUND)
+foreach(lib_dir ${AVR_LIB_USED})
+	file(GLOB lib_files "${AVR_LIB_PATH}/${lib_dir}/*.asm"
+	                    "${AVR_LIB_PATH}/${lib_dir}/*.c"
+	                    "${AVR_LIB_PATH}/${lib_dir}/*.s"
+	                    "${AVR_LIB_PATH}/${lib_dir}/*.S"
+	)
+	list(APPEND AVR_LIB_SRC_FILES "${lib_files}")
+	if(NOT lib_files)
+		list(APPEND AVR_LIB_NOT_FOUND ${lib_dir})
+	endif()
+endforeach()
+
+# Project setup
+include_directories(${INC_PATH} ${AVR_LIB_INC_PATH})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${AVR_LIB_SRC_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
+
+# Compile targets
+add_custom_target(strip   avr-strip "${PROJECT_NAME}.elf" DEPENDS ${PROJECT_NAME})
+add_custom_target(size    avr-size --format=avr --mcu=${MCU_TYPE} "${PROJECT_NAME}.elf" DEPENDS ${PROJECT_NAME})
+add_custom_target(hex ALL avr-objcopy -j .text -j .data -O ihex "${PROJECT_NAME}.elf" "${PROJECT_NAME}.hex" DEPENDS strip size)
+add_custom_target(eeprom  avr-objcopy -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O ihex "${PROJECT_NAME}.elf" "${PROJECT_NAME}.eep" DEPENDS strip)
+
+add_custom_target(fuse         avrdude -c ${PROG_TYPE} -p ${MCU_TYPE} -V -U lfuse:w:${LFUSE}:m -U hfuse:w:${HFUSE}:m)
+add_custom_target(fuse_ext     avrdude -c ${PROG_TYPE} -p ${MCU_TYPE} -V -U lfuse:w:${LFUSE}:m -U hfuse:w:${HFUSE}:m -U efuse:w:${EFUSE}:m)
+add_custom_target(flash        avrdude -c ${PROG_TYPE} -p ${MCU_TYPE} -V -U flash:w:${PROJECT_NAME}.hex:i DEPENDS hex)
+add_custom_target(flash_eeprom avrdude -c ${PROG_TYPE} -p ${MCU_TYPE} -V -U eeprom:w:${PROJECT_NAME}.eep:i DEPENDS eeprom)
+
+# Cleaning
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_NAME}.elf;${PROJECT_NAME}.hex;${PROJECT_NAME}.eep")
+
+# Logging
+message("* ")
+message("* Project name:\t${PROJECT_NAME}")
+message("* Source path:\t${SRC_PATH}")
+message("* Include path:\t${INC_PATH}")
+message("* ")
+message("* Lib includes:\t${AVR_LIB_INC_PATH}")
+if(AVR_LIB_NOT_FOUND)
+	message("* WARNING MISSING LIBS:\t${AVR_LIB_NOT_FOUND}")
+endif()
+message("* ")
