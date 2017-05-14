@@ -31,7 +31,7 @@ uint8_t color_sensor_init()
 	set_read_address(0x12);
 	usi_twi_read_bytes(TCS3472_ADR, data, 1);
 
-	return (data[0] == 0x44 || data[0] == 0x4d);
+	return !(data[0] == 0x44 || data[0] == 0x4d);
 }
 
 void color_sensor_sleep()
