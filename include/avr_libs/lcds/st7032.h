@@ -13,7 +13,7 @@
 #define LCD_CMD_DSP_ON  0x08
 #define LCD_CMD_DSP_OFF 0x0c
 
-uint8_t lcd_init();
+uint8_t lcd_init(void);
 
 void lcd_cmd(uint8_t cmd);
 

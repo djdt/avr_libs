@@ -4,10 +4,10 @@
 #include <stdint.h>
 
 // Inits device into wait state
-uint8_t color_sensor_init();
+uint8_t color_sensor_init(void);
 
-void color_sensor_sleep();
-void color_sensor_wake();
+void color_sensor_sleep(void);
+void color_sensor_wake(void);
 
 // Simultaneous read for all channels
 void color_sensor_read(uint16_t* clear,

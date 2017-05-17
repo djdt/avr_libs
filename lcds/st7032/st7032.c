@@ -7,7 +7,7 @@
 #define CTRL_CMD 0x00
 #define CTRL_RAM 0x40
 
-uint8_t lcd_init()
+uint8_t lcd_init(void)
 {
 	uint8_t data[] = {
 		0x00, 0x38, // cmd, function

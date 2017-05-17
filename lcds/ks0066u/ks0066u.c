@@ -39,7 +39,7 @@ void lcd_ram(uint8_t ram)
 
 /* END INTERNAL */
 
-void lcd_init()
+void lcd_init(void)
 {
 	send_4_bits(LCD_CMD_FNC);
 	_delay_us(100);

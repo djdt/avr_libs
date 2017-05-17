@@ -12,7 +12,7 @@ void set_read_address(uint8_t adr)
 }
 
 // Init into a wait state
-uint8_t color_sensor_init()
+uint8_t color_sensor_init(void)
 {
 	// Enable device
 	uint8_t data[] = {0x00, 0x09};
@@ -34,13 +34,13 @@ uint8_t color_sensor_init()
 	return !(data[0] == 0x44 || data[0] == 0x4d);
 }
 
-void color_sensor_sleep()
+void color_sensor_sleep(void)
 {
 	uint8_t data[] = {0x00, 0x08};
 	usi_twi_send_bytes(TCS3472_ADR, data, 2);
 }
 
-void color_sensor_wake()
+void color_sensor_wake(void)
 {
 	uint8_t data[] = {0x00, 0x09};
 	usi_twi_send_bytes(TCS3472_ADR, data, 2);

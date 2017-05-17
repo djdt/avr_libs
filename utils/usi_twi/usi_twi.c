@@ -5,7 +5,7 @@ uint8_t USISR_8BIT = // Clear flags and set to count 16 clocks
 uint8_t USISR_1BIT = // Clear flags and set to count 2 clocks
 (1<<USISIF)|(1<<USIOIF)|(1<<USIPF)|(USIDC)|(0xe<<USICNT0);
 
-void usi_twi_init()
+void usi_twi_init(void)
 {
 	// Enable pullup on SDA/SCL, to set high as released state.
 	PORT_USI |= (1<<PIN_USI_SDA);

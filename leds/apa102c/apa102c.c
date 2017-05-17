@@ -2,7 +2,7 @@
 
 #include <util/delay.h>
 
-#define APA102C_DELAY 0.5
+#define APA102C_DELAY 1 // us
 
 void rgb_led_init(apa102c_t* apa102c)
 {
