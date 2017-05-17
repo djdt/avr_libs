@@ -71,7 +71,7 @@ uint8_t usi_twi_transfer_start(uint8_t adr)
 	return 0;
 }
 
-void usi_twi_transfer_stop()
+void usi_twi_transfer_stop(void)
 {
 	// Stop condition
 	PORT_USI &= ~(1<<PIN_USI_SDA);         // Pull SDA low.
