@@ -3,6 +3,12 @@
 
 #include <stdint.h>
 
+#define RGB_LED_SET(port, ddr, clk, data) \
+	RGB_LED_PORT     = port;                \
+	RGB_LED_DDR      = ddr;                 \
+	RGB_LED_PIN_CLK  = pin_clk;             \
+	RGB_LED_PIN_DATA = pin_data;
+
 typedef struct rgb_led {
 	uint8_t brightness;
 	uint8_t red;
