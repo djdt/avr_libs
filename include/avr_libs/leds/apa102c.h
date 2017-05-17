@@ -6,8 +6,8 @@
 #include "avr_libs/leds/rgb_led.h"
 
 typedef struct {
-	uint8_t* ddr;
-	uint8_t* port;
+	volatile uint8_t* ddr;
+	volatile uint8_t* port;
 	uint8_t  clock_pin;
 	uint8_t  data_pin;
 } apa102c_t;
