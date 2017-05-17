@@ -4,50 +4,50 @@
 
 #define APA102C_DELAY 1 // us
 
-void rgb_led_init(apa102c_t* apa102c)
+void rgb_led_init(void)
 {
 	// Set high
-	*(apa102c->port) |= (1<<apa102c->clock_pin)|(1<<apa102c->data_pin);
+	APA102C_PORT |= (1<<APA102C_PIN_CLK)|(1<<APA102C_PIN_DATA);
 	// Set as outputs
-	*(apa102c->ddr)	|= (1<<apa102c->clock_pin)|(1<<apa102c->data_pin);
+	APA102C_DDR	|= (1<<APA102C_PIN_CLK)|(1<<APA102C_PIN_DATA);
 }
 
-void rgb_led_send_byte(apa102c_t* apa102c, uint8_t byte)
+void rgb_led_send_byte(uint8_t byte)
 {
 	uint8_t i;
 	for (i = 0; i < 8; ++i) {
-		*(apa102c->port) &= ~(1<<apa102c->clock_pin); // Pull low
+		APA102C_PORT &= ~(1<<APA102C_PIN_CLK); // Pull low
 
 		if (byte & 0x80) // msb
-			*(apa102c->port) |=  (1<<apa102c->data_pin);
+			APA102C_PORT |=  (1<<APA102C_PIN_DATA);
 		else
-			*(apa102c->port) &= ~(1<<apa102c->data_pin);
+			APA102C_PORT &= ~(1<<APA102C_PIN_DATA);
 
 		_delay_us(APA102C_DELAY); // Clock low
 
-		*(apa102c->port) |=  (1<<apa102c->clock_pin); // Pull high
+		APA102C_PORT |=  (1<<APA102C_PIN_CLK); // Pull high
 		_delay_us(APA102C_DELAY); // Clock high
 
 		byte = byte << 1;
 	}
 }
 
-void rgb_led_set_leds(apa102c_t* apa102c, rgb_led_t* leds, uint8_t num_leds)
+void rgb_led_set_leds(rgb_led_t* leds, uint8_t num_leds)
 {
 	uint8_t i;
 	// Start frame
 	for (i = 0; i < 4; ++i) {
-		rgb_led_send_byte(apa102c, 0x00);
+		rgb_led_send_byte(0x00);
 	}
 	// Data
 	for (i = 0; i < num_leds; ++i) {
-		rgb_led_send_byte(apa102c, 0xe0 | (*leds).brightness);
-		rgb_led_send_byte(apa102c, (*leds).red);
-		rgb_led_send_byte(apa102c, (*leds).green);
-		rgb_led_send_byte(apa102c, (*leds).blue);
+		rgb_led_send_byte(0xe0 | (*leds).brightness);
+		rgb_led_send_byte((*leds).red);
+		rgb_led_send_byte((*leds).green);
+		rgb_led_send_byte((*leds).blue);
 	}
 	// End frame
 	for (i = 0; i < 4; ++i) {
-		rgb_led_send_byte(apa102c, 0xff);
+		rgb_led_send_byte(0xff);
 	}
 }
