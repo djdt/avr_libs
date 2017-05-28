@@ -95,7 +95,7 @@ void usi_twi_transfer_stop(void)
 uint8_t usi_twi_send_bytes(uint8_t adr, uint8_t* data, uint8_t data_len)
 {
 	// Start cond.
-	if (usi_twi_transfer_start(adr))
+	if (usi_twi_transfer_start(adr << 1))
 		return 1;
 
 	// Send the data.
@@ -117,7 +117,7 @@ uint8_t usi_twi_send_bytes(uint8_t adr, uint8_t* data, uint8_t data_len)
 uint8_t usi_twi_read_bytes(uint8_t adr, uint8_t* data, uint8_t data_len)
 {
 	// Start cond.
-	if (usi_twi_transfer_start(adr & 0x01))
+	if (usi_twi_transfer_start((adr << 1) | 0x01))
 		return 1;
 
 	// Read data.
