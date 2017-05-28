@@ -39,6 +39,12 @@ void lcd_ram(uint8_t ram)
 
 /* END INTERNAL */
 
+void lcd_cmd(uint8_t cmd)
+{
+	send_byte(cmd, BL);
+	_delay_us(50);
+}
+
 void lcd_init(void)
 {
 	send_4_bits(LCD_CMD_FNC);
@@ -47,12 +53,6 @@ void lcd_init(void)
 	lcd_cmd(LCD_CMD_DSP | 0x04);
 	lcd_cmd(LCD_CMD_CLR);
 	_delay_ms(2);
-}
-
-void lcd_cmd(uint8_t cmd)
-{
-	send_byte(cmd, BL);
-	_delay_us(50);
 }
 
 void lcd_cursor(uint8_t x, uint8_t y)

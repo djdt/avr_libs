@@ -7,8 +7,8 @@
 
 void set_read_address(uint8_t adr)
 {
-	adr = adr + 0x80 + 0x20;
-	usi_twi_send_bytes(TCS3472_ADR, &adr, 1);
+	uint8_t read_adr = adr | 0x80 | 0x20;
+	usi_twi_send_bytes(TCS3472_ADR, &read_adr, 1);
 }
 
 // Init into a wait state
@@ -29,9 +29,15 @@ uint8_t color_sensor_init(void)
 
 	// Read the ID to confirm
 	set_read_address(0x12);
-	usi_twi_read_bytes(TCS3472_ADR, data, 1);
+	if (!usi_twi_read_bytes(TCS3472_ADR, data, 1)) {
+		return 1;
+	}
 
-	return !(data[0] == 0x44 || data[0] == 0x4d);
+	if (data[0] == 0x44 || data[0] == 0x4d) {
+		return 0;
+	} else {
+		return data[0];
+	}
 }
 
 void color_sensor_sleep(void)
