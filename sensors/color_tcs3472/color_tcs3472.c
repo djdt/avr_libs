@@ -16,7 +16,8 @@ uint8_t color_sensor_init(void)
 {
 	// Enable device
 	uint8_t data[] = {0x00, 0x09};
-	usi_twi_send_bytes(TCS3472_ADR, data, 2);
+	if (usi_twi_send_bytes(TCS3472_ADR, data, 2))
+		return 1;
 
 	// Set the RGBC intergration time to 10 cycles (24ms)
 	data[0] = 0x01;
@@ -29,9 +30,8 @@ uint8_t color_sensor_init(void)
 
 	// Read the ID to confirm
 	set_read_address(0x12);
-	if (!usi_twi_read_bytes(TCS3472_ADR, data, 1)) {
+	if (usi_twi_read_bytes(TCS3472_ADR, data, 1))
 		return 1;
-	}
 
 	if (data[0] == 0x44 || data[0] == 0x4d) {
 		return 0;
