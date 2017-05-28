@@ -5,7 +5,7 @@
 #include <util/delay.h>
 #include <stdio.h>
 
-#define LCD_ADR 0x7e
+#define LCD_ADR 0x3f
 
 #define RS      0x01
 #define RW      0x02

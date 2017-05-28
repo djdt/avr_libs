@@ -2,7 +2,7 @@
 
 #include "avr_libs/utils/usi_twi.h"
 
-#define LCD_ADR 0x7c
+#define LCD_ADR 0x3e
 
 #define CTRL_CMD 0x00
 #define CTRL_RAM 0x40
