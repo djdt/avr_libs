@@ -5,13 +5,12 @@
 #include <util/delay.h>
 
 #ifdef USI_TWI_FAST_MODE
-	// TWI FAST mode timing limits. SCL = 100-400kHz
-	#define T2_DELAY (((F_CPU / 1000) *1300) /250000) +1 // >1,3us
-	#define T4_DELAY (((F_CPU / 1000) * 600) /250000) +1 // >0,6us
+	#define T2_DELAY 1.3 // us
+	#define T4_DELAY 0.6 // us
 #else
 	// TWI STANDARD mode timing limits. SCL <= 100kHz
-	#define T2_DELAY (((F_CPU / 1000) *4700) /250000) +1 // >4,7us
-	#define T4_DELAY (((F_CPU / 1000) *4000) /250000) +1 // >4,0us
+	#define T2_DELAY 4.7 // us
+	#define T4_DELAY 4.0 // us
 #endif
 
 // Device dependant defines

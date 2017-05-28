@@ -1,9 +1,9 @@
 #include "avr_libs/utils/usi_twi.h"
 
-uint8_t USISR_8BIT = // Clear flags and set to count 16 clocks
-(1<<USISIF)|(1<<USIOIF)|(1<<USIPF)|(USIDC)|(0x0<<USICNT0);
-uint8_t USISR_1BIT = // Clear flags and set to count 2 clocks
-(1<<USISIF)|(1<<USIOIF)|(1<<USIPF)|(USIDC)|(0xe<<USICNT0);
+const uint8_t USISR_8BIT = // Clear flags and set to count 16 clocks
+(1<<USISIF)|(1<<USIOIF)|(1<<USIPF)|(1<<USIDC)|(0x0<<USICNT0);
+const uint8_t USISR_1BIT = // Clear flags and set to count 2 clocks
+(1<<USISIF)|(1<<USIOIF)|(1<<USIPF)|(1<<USIDC)|(0xe<<USICNT0);
 
 void usi_twi_init(void)
 {
@@ -15,25 +15,27 @@ void usi_twi_init(void)
 	DDR_USI  |= (1<<PIN_USI_SDA);
 	USIDR = 0xff;                                // Preload data.
 	USICR = (0<<USISIE)|(0<<USIOIE)|             // Disable Interrupts.
-		(1<<USIWM1)|(0<<USIWM0)|             // Set USI in Two-wire mode.
-		(1<<USICS1)|(0<<USICS0)|(1<<USICLK)| // Software stobe clock
-		(0<<USITC);
+		      (1<<USIWM1)|(0<<USIWM0)|             // Set USI in Two-wire mode.
+		      (1<<USICS1)|(0<<USICS0)|(1<<USICLK)| // Software stobe clock
+		      (0<<USITC);
 	// Clear flags and reset counter
 	USISR = (1<<USISIF)|(1<<USIOIF)|(1<<USIPF)|(1<<USIDC)|
-		(0x0<<USICNT0);
+		      (0x0<<USICNT0);
 }
 
 uint8_t usi_twi_transfer_byte(uint8_t byte)
 {
 	USISR = byte; // Set to byte
 	byte = (0<<USISIE)|(0<<USIOIE)|             // Interrupts disabled.
-		(1<<USIWM1)|(0<<USIWM0)|             // Set usi two wire.
-		(1<<USICS1)|(0<<USICS0)|(1<<USICLK)| // Software strobe clock.
-		(1<<USITC);                          // Toggle Clock Port.
+		     (1<<USIWM1)|(0<<USIWM0)|             // Set usi two wire.
+		     (1<<USICS1)|(0<<USICS0)|(1<<USICLK)| // Software strobe clock.
+		     (1<<USITC);                          // Toggle Clock Port.
 	do {
 		_delay_us(T2_DELAY);
 		USICR = byte;                             // Tick
-		while (!(PIN_USI & (1<<PIN_USI_SCL)));    // Wait for SCL to go high.
+		while (!(PIN_USI & (1<<PIN_USI_SCL))) {   // Wait for SCL to go high.
+			/* Nothing */
+		}
 		_delay_us(T4_DELAY);
 		USICR = byte;                             // Tick
 	} while (!(USISR & (1<<USIOIF)));           // Check for transfer.
@@ -50,8 +52,14 @@ uint8_t usi_twi_transfer_start(uint8_t adr)
 {
 	// Release SCL and wait until high for start cond.
 	PORT_USI |= (1<<PIN_USI_SCL);
-	while (!(PIN_USI & (1<<PIN_USI_SCL)));
+	while (!(PIN_USI & (1<<PIN_USI_SCL))) {
+		/* Nothing */
+	}
+#ifdef USI_TWI_FAST_MODE
+	_delay_us(T4_DELAY);
+#else
 	_delay_us(T2_DELAY);
+#endif
 
 	// Generate start cond.
 	PORT_USI &= ~(1<<PIN_USI_SDA);
@@ -76,7 +84,9 @@ void usi_twi_transfer_stop(void)
 	// Stop condition
 	PORT_USI &= ~(1<<PIN_USI_SDA);         // Pull SDA low.
 	PORT_USI |= (1<<PIN_USI_SCL);          // Release SCL.
-	while (!(PIN_USI & (1<<PIN_USI_SCL))); // Wait for SCL to go high.
+	while (!(PIN_USI & (1<<PIN_USI_SCL))) {// Wait for SCL to go high.
+		/* Nothing */
+	}
 	_delay_us(T4_DELAY);
 	PORT_USI |= (1<<PIN_USI_SDA);          // Release SDA.
 	_delay_us(T2_DELAY);
