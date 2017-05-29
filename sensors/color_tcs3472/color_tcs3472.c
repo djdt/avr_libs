@@ -33,11 +33,10 @@ uint8_t color_sensor_init()
 	if (usi_twi_read_bytes(TCS3472_ADR, data, 1))
 		return 2;
 
-	if (data[0] == 0x44) {
+	if (data[0] == 0x44)
 		return 0;
-	} else {
+	else
 		return data[0];
-	}
 }
 
 void color_sensor_sleep(void)
