@@ -60,7 +60,7 @@ void color_sensor_read(
 	usi_twi_send_bytes(TCS3472_ADR, data, 2);
 
 	// Wait an appropriate time
-	_delay_ms(TIME_MS(TCS3472_WTIME) + TIME_MS(TCS3472_ATIME));
+	_delay_ms(TIME_MS(TCS3472_WTIME) + TIME_MS(TCS3472_ATIME) + 2.4);
 
 	// Set address and read data
 	data[0] = ADR(0x14);
