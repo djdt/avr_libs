@@ -3,8 +3,13 @@
 
 #include <stdint.h>
 
+// Times in ms = (256 - val) * 2.4
+// RGBC counts = (256 - val) * 1024
+#define TCS3472_WTIME 0xff // 2.4ms
+#define TCS3472_ATIME 0xc0 // 154ms, 65535 counts
+
 // Inits device into wait state
-uint8_t color_sensor_init(void);
+uint8_t color_sensor_init();
 
 void color_sensor_sleep(void);
 void color_sensor_wake(void);
