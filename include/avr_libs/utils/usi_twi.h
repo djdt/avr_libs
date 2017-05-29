@@ -4,6 +4,8 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#define USI_TWI_FAST_MODE
+
 #ifdef USI_TWI_FAST_MODE
 	#define T2_DELAY 1.3 // us
 	#define T4_DELAY 0.6 // us
