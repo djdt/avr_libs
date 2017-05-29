@@ -9,7 +9,7 @@
 #define TCS3472_ATIME 0xc0 // 154ms, 65535 counts
 
 // Inits device into wait state
-uint8_t color_sensor_init();
+uint8_t color_sensor_init(void);
 
 void color_sensor_sleep(void);
 void color_sensor_wake(void);

@@ -10,7 +10,7 @@
 #define TIME_MS(step) ((256 - step) * 2.4)
 
 // Init into a wait state
-uint8_t color_sensor_init()
+uint8_t color_sensor_init(void)
 {
 	// Set the RGBC intergration time
 	uint8_t data[] = {ADR(0x01), TCS3472_ATIME};
