@@ -41,7 +41,7 @@ void rgb_led_set_leds(rgb_led_t* leds, uint8_t num_leds)
 	}
 	// Data
 	for (i = 0; i < num_leds; ++i) {
-		rgb_led_send_byte(0xe0 | (*leds).brightness);
+		rgb_led_send_byte((*leds).brightness);
 		rgb_led_send_byte((*leds).red);
 		rgb_led_send_byte((*leds).green);
 		rgb_led_send_byte((*leds).blue);
