@@ -45,6 +45,7 @@ void rgb_led_set_leds(rgb_led_t* leds, uint8_t num_leds)
 		rgb_led_send_byte((*leds).red);
 		rgb_led_send_byte((*leds).green);
 		rgb_led_send_byte((*leds).blue);
+		++leds;
 	}
 	// End frame
 	for (i = 0; i < 4; ++i) {
