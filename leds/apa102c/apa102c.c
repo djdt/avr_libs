@@ -2,7 +2,7 @@
 
 #include <util/delay.h>
 
-#define APA102C_DELAY 0.5 // us
+/* #define APA102C_DELAY 0.5 // us */
 
 void rgb_led_init(void)
 {
@@ -22,11 +22,12 @@ void rgb_led_send_byte(uint8_t byte)
 			APA102C_PORT |=  (1<<APA102C_PIN_DATA);
 		else
 			APA102C_PORT &= ~(1<<APA102C_PIN_DATA);
-
-		_delay_us(APA102C_DELAY); // Clock low
+		/* _delay_us(APA102C_DELAY); // Clock low */
+		__asm__("nop");
 
 		APA102C_PORT |=  (1<<APA102C_PIN_CLK); // Pull high
-		_delay_us(APA102C_DELAY); // Clock high
+		/* _delay_us(APA102C_DELAY); // Clock high */
+		__asm__("nop");
 
 		byte = byte << 1;
 	}
