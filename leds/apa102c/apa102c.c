@@ -2,7 +2,7 @@
 
 #include <util/delay.h>
 
-#define APA102C_DELAY 1 // us
+#define APA102C_DELAY 0.5 // us
 
 void rgb_led_init(void)
 {
@@ -47,8 +47,8 @@ void rgb_led_set_leds(rgb_led_t* leds, uint8_t num_leds)
 		rgb_led_send_byte((*leds).blue);
 		++leds;
 	}
-	// End frame
-	for (i = 0; i < 4; ++i) {
+	// End frame (unneeded?)
+	for (i = 0; i < (num_leds + 1) / 2; ++i) {
 		rgb_led_send_byte(0xff);
 	}
 }
