@@ -7,7 +7,7 @@ void rgb_led_init(void)
 	// Set high
 	APA102C_PORT |= (1<<APA102C_PIN_CLK)|(1<<APA102C_PIN_DATA);
 	// Set as outputs
-	APA102C_DDR	 |= (1<<APA102C_PIN_CLK)|(1<<APA102C_PIN_DATA);
+	APA102C_DDR  |= (1<<APA102C_PIN_CLK)|(1<<APA102C_PIN_DATA);
 }
 
 void rgb_led_send_byte(uint8_t byte)
@@ -39,9 +39,9 @@ void rgb_led_set_leds(rgb_led_t* leds, uint8_t num_leds)
 	// Data
 	for (i = 0; i < num_leds; ++i) {
 		rgb_led_send_byte(0xe0 | (*leds).brightness);
-		rgb_led_send_byte((*leds).color.r);
-		rgb_led_send_byte((*leds).color.g);
 		rgb_led_send_byte((*leds).color.b);
+		rgb_led_send_byte((*leds).color.g);
+		rgb_led_send_byte((*leds).color.r);
 		++leds;
 	}
 	// End frame (unneeded?)
