@@ -13,7 +13,13 @@
 */
 
 #include "apa102c.config.h"
-#include "avr_libs/leds/rgb_led.h"
+#include "avr_libs/leds/rgb.h"
+
+// APA102C LED
+typedef struct rgb_led {
+	uint8_t brightness;
+	rgb_t color;
+} rgb_led_t;
 
 // Setup for pins.
 void rgb_led_init(void);
