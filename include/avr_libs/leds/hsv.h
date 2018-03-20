@@ -5,9 +5,9 @@
 #include "avr_libs/leds/rgb.h"
 
 typedef struct hsv {
-	uint16_t h;
-	uint16_t s;
-	uint16_t v;
+	uint8_t h;
+	uint8_t s;
+	uint8_t v;
 } hsv_t;
 
 rgb_t hsv_to_rgb(hsv_t hsv);
